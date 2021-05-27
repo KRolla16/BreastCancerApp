@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "873244076182",
+    "project_id": "pracamgr-projekt",
+    "storage_bucket": "pracamgr-projekt.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:873244076182:android:7ce5218555bfcc69e67ab7",
+        "android_client_info": {
+          "package_name": "com.example.breastcancerapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "873244076182-f9kff15bcg6aqt3md2oulenumrm2bvjm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHIVZWQkvJsx0RrbWxx-8KTowTdpw3TOU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "873244076182-f9kff15bcg6aqt3md2oulenumrm2bvjm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
