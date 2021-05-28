@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,6 +27,7 @@ public class ProfileActivity extends AppCompatActivity {
     private Button logout,nextAct;
     private FirebaseUser user;
     private DatabaseReference reference;
+    ImageView profileImageView;
 
     private String userID;
 
@@ -33,6 +36,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        profileImageView = (ImageView) findViewById(R.id.profile_image2);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
@@ -70,23 +74,17 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
 
-        logout = (Button) findViewById(R.id.signOut);
+
         nextAct = (Button) findViewById(R.id.buttonNxtAct);
 
         nextAct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ProfileActivity.this, PredictActivity.class));
+                startActivity(new Intent(ProfileActivity.this, EditProfileActivity.class));
             }
         });
 
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(ProfileActivity.this,MainActivity.class));
-            }
-        });
+
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Users");
@@ -107,10 +105,16 @@ public class ProfileActivity extends AppCompatActivity {
                    String email = userProfile.email;
                    String age = userProfile.age;
 
-                   greetingTextView.setText("Welcome, " + fullName);
+                   greetingTextView.setText("Welcome, \n" + fullName);
                    //fullNameTextView.setText(fullName);
                    emailTextView.setText(email);
                    ageTextView.setText(age);
+
+                   if (user.getPhotoUrl() != null){
+                       Glide.with(ProfileActivity.this)
+                               .load(user.getPhotoUrl())
+                               .into(profileImageView);
+                   }
                }
             }
 
