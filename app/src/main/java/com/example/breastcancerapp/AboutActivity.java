@@ -3,21 +3,35 @@ package com.example.breastcancerapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class AboutActivity extends AppCompatActivity {
 
+
+    TextView textViewb, textViewA1, textViewA2, textViewA3;
+    ImageView imageViewA1;
+    Button buttonA1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
 
-
+        textViewb = (TextView) findViewById(R.id.bannerInfo);
+        textViewA1 = (TextView) findViewById(R.id.txtAboutCancer);
+        textViewA2 = (TextView) findViewById(R.id.txtAboutCancer2);
+        textViewA3 = (TextView) findViewById(R.id.txtAboutCancer3);
+        imageViewA1 = (ImageView) findViewById(R.id.imageViewAbout);
+        buttonA1 = (Button) findViewById(R.id.buttoncheckyourbreasts);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
@@ -55,5 +69,15 @@ public class AboutActivity extends AppCompatActivity {
         });
 
 
+
+        buttonA1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String ytVideo = "https://www.youtube.com/watch?v=KVSbiwraxbw";
+                Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
+                intent.putExtra(SearchManager.QUERY, ytVideo);
+                startActivity(intent);
+            }
+        });
     }
 }

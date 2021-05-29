@@ -5,6 +5,11 @@
     <string name="login_password_hint">Password</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-
+    <string name="toKnow">What should we know about Breast Cancer?</string>
+    <string name="toKnow1">The topic of breast cancer prevention is a really important issue, especially among women.</string>
+    <string name="toKnow2">Breast cancer is a malignant tumor arising from cells of the mammary gland, which develops locally in the breast and gives metastasis to lymph nodes and internal organs. Breast cancer is the most common malignancy in women</string>
+    <string name="toKnow3"> There are more and more research papers on machine learning in medicine.
+        At the same time, it can be noted that relatively few of these solutions can be applied in practice.
+    </string>
 
 </resources>
