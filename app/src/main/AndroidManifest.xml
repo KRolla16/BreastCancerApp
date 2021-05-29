@@ -14,11 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BreastCancerApp">
-        <activity android:name=".EditProfileActivity"></activity>
-        <activity android:name=".MainActivityPROBAFRAGMENTS" />
+        <activity android:name=".InventoryActivity" />
+        <activity android:name=".EditProfileActivity" />
         <activity android:name=".AboutActivity" />
         <activity android:name=".HomeActivity" />
-        <activity android:name=".MainActivity3" />
         <activity android:name=".PredictActivity" />
         <activity android:name=".ForgotPassword" />
         <activity android:name=".ProfileActivity" />

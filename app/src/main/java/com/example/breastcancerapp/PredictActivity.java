@@ -16,6 +16,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
@@ -31,8 +32,13 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
 import org.tensorflow.lite.DataType;
@@ -58,10 +64,16 @@ public class PredictActivity extends AppCompatActivity {
     private Bitmap img;
     private TextView tv;
 
+    private Uri mImageUri;
+    private DatabaseReference mDatabaseRef;
+    private StorageTask mUploadTask;
+    private FirebaseUser user;
+    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
+        setContentView(R.layout.activity_predict);
 
        // imgView = (ImageView) findViewById(R.id.imageView);
         selectedImage = (ImageView) findViewById(R.id.imageView);
@@ -107,6 +119,7 @@ public class PredictActivity extends AppCompatActivity {
         });
 
         storageReference = FirebaseStorage.getInstance().getReference();
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
 
         /*select.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,6 +131,8 @@ public class PredictActivity extends AppCompatActivity {
 
             }
         });*/
+
+
 
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,7 +180,12 @@ public class PredictActivity extends AppCompatActivity {
 
 
                     tv.setText(outputFeature0.getFloatArray()[0] + "\n"+outputFeature0.getFloatArray()[1]);
+
+                    if (outputFeature0.getFloatArray()[1] == 1.0) {
                     getSupportFragmentManager().beginTransaction().replace(R.id.container2,new FragmentBad()).commit();
+                    }else {
+                        getSupportFragmentManager().beginTransaction().replace(R.id.container2,new FragmentGood()).commit();
+                    }
                 } catch (IOException e) {
                     // TODO Handle the exception
                 }
@@ -176,6 +196,45 @@ public class PredictActivity extends AppCompatActivity {
 
 
 
+    private String getFileExtension(Uri uri) {
+        ContentResolver cR = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(cR.getType(uri));
+    }
+
+
+    private void uploadFile() {
+        if (mImageUri != null) {
+            StorageReference fileReference = storageReference.child(System.currentTimeMillis()
+                    + "." + getFileExtension(mImageUri));
+            mUploadTask = fileReference.putFile(mImageUri)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Handler handler = new Handler();
+                            Toast.makeText(PredictActivity.this, "Upload successful", Toast.LENGTH_LONG).show();
+                            Upload upload = new Upload(taskSnapshot.getUploadSessionUri().toString());
+                            String uploadId = mDatabaseRef.push().getKey();
+                            mDatabaseRef.child(uploadId).setValue(upload);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(PredictActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+
+                        }
+                    });
+        } else {
+            Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 
 
@@ -228,12 +287,14 @@ public class PredictActivity extends AppCompatActivity {
         if (requestCode == GALLERY_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 Uri contentUri = data.getData();
+                mImageUri = data.getData();
                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                 String imageFileName = "JPEG_" + timeStamp + "." + getFileExt(contentUri);
                 Log.d("tag", "onActivityResult: Gallery Image Uri:  " + imageFileName);
                 selectedImage.setImageURI(contentUri);
 
                 uploadImageToFirebase(imageFileName,contentUri);
+                //uploadFile();
                 selectedImage.setImageURI(data.getData());
 
                 Uri uri = data.getData();
@@ -264,6 +325,14 @@ public class PredictActivity extends AppCompatActivity {
 
     private void uploadImageToFirebase(String name, Uri contentUri) {
         final StorageReference image = storageReference.child("images/" + name);
+        mUploadTask = image.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Upload upload = new Upload(taskSnapshot.getUploadSessionUri().toString());
+                String uploadId = mDatabaseRef.push().getKey();
+                mDatabaseRef.child(uploadId).setValue(upload);
+            }
+        });
         image.putFile(contentUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -279,7 +348,7 @@ public class PredictActivity extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(PredictActivity.this, "Upload Failled.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PredictActivity.this, "Upload Failed.", Toast.LENGTH_SHORT).show();
             }
         });
 

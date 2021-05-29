@@ -83,5 +83,29 @@ FirebaseAuth firebaseAuth;
             }
         });
 
+
+        goToProfilebutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
+            }
+        });
+
+
+        goToAboutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(HomeActivity.this, AboutActivity.class));
+            }
+        });
+
+
+        goToInventoryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(HomeActivity.this, InventoryActivity.class));
+            }
+        });
+
     }
 }

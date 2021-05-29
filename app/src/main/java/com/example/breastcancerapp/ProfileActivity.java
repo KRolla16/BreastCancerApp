@@ -28,7 +28,7 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseUser user;
     private DatabaseReference reference;
     ImageView profileImageView;
-
+    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
     private String userID;
 
     @Override

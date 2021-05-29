@@ -1,18 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:clickable="true"
+    android:layout_gravity="bottom"
+    android:gravity="bottom"
     tools:context=".FragmentBad">
 
-    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="30dp"
+        android:layout_marginBottom="50dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="12"
+        android:gravity="center"
+        android:layout_marginTop="30dp">
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imageInfo"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="left"
+            android:layout_margin="30dp"
+            android:src="@drawable/br"
+            app:civ_border_color="@color/colorPrimary"
+            app:civ_border_width="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/buttonHospitalPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Check more info"
+            android:layout_gravity="right"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.813"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profile_image2"
+            app:layout_constraintVertical_bias="0.111" />
+
+    </LinearLayout>
     <TextView
         android:id="@+id/fragment_container"
-        android:layout_width="411dp"
-        android:layout_height="270dp"
-        android:text="@string/hello_blank_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="You should visit a doctor!"
+        android:textAlignment="center"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="461dp" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        tools:layout_editor_absoluteY="461dp"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:layout_margin="5dp"/>
+    </LinearLayout>
+</RelativeLayout>
